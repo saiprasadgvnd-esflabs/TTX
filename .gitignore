@@ -1,0 +1,6 @@
+api/node_modules
+*/node_modules
+*/.bolt
+postgres-data
+project-bolt-sb1-gmrquc2e.zip
+*/.env

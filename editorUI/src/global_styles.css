@@ -1,0 +1,35 @@
+/* Import Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Global styles */
+body {
+  @apply antialiased text-blue-100;
+  background: black;
+  overflow-x: hidden;
+}
+
+/* Futuristic focus styles */
+*:focus {
+  @apply outline-none ring-2 ring-blue-500/50 ring-offset-0;
+}

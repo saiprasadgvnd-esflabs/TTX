@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build: 
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: express_app
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+    depends_on:
+      - db
+    volumes:
+      - ./api/src:/app/src
+
+  db:
+    image: postgres:16
+    container_name: ttx_postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5832:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
