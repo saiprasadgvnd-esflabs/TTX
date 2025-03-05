@@ -1,0 +1,244 @@
+.management-section {
+  display: grid;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.section-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  width: 100%;
+}
+
+.header-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.filter-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.filter-group select {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 16px 12px;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+}
+
+.filter-group select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.section-header h2 {
+  color: #FFFFFF;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.add-button {
+  background: #FFFFFF;
+  color: #2c3e50;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-end;
+}
+
+.add-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.add-button i {
+  font-size: 1rem;
+}
+
+/* List Container */
+.list-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.table-responsive {
+  overflow-x: auto;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-top: 1rem;
+  max-height: 70vh;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  font-weight: 600;
+  text-align: left;
+  padding: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+th:first-child {
+  width: 60px;
+}
+
+th:nth-child(2) {
+  width: 35%;
+}
+
+th:nth-child(3) {
+  width: 20%;
+}
+
+th:nth-child(4) {
+  width: 15%;
+}
+
+th:nth-child(5) {
+  width: 20%;
+}
+
+th:last-child {
+  width: 10%;
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #FFFFFF;
+  vertical-align: top;
+}
+
+td:nth-child(2) {
+  word-break: break-word;
+}
+
+.nist-frameworks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.nist-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: #FFFFFF;
+  padding: 0.3rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.action-btn.edit {
+  color: #3498db;
+}
+
+.action-btn.delete {
+  color: #e74c3c;
+}
+
+.action-btn:hover {
+  transform: scale(1.2);
+}
+
+@media (max-width: 1200px) {
+  table {
+    min-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-header {
+    padding: 1.5rem;
+  }
+  
+  .header-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .filters-container {
+    flex-direction: column;
+  }
+  
+  .filter-group {
+    width: 100%;
+  }
+  
+  .add-button {
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+  
+  .table-responsive {
+    max-height: 60vh;
+  }
+}

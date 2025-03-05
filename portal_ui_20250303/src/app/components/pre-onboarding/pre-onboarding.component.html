@@ -1,0 +1,487 @@
+<div class="pre-onboarding-container">
+  <div class="form-wrapper">
+    <h1>Tabletop Exercise Pre-Onboarding Checklist</h1>
+    
+    <form (ngSubmit)="onSubmit()" #onboardingForm="ngForm">
+      <!-- 1️⃣ Governance -->
+      <section class="form-section">
+        <h2><span class="section-number">1️⃣</span> Governance</h2>
+        
+        <h3>Organization Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="organizationName">Organization Name</label>
+            <input type="text" id="organizationName" [(ngModel)]="formData.organizationName" name="organizationName" required>
+          </div>
+
+          <div class="form-group">
+            <label for="industrySector">Industry Sector</label>
+            <select id="industrySector" [(ngModel)]="formData.industrySector" name="industrySector" required>
+              <option value="">Select Industry</option>
+              <option *ngFor="let sector of industrySectors" [value]="sector">{{sector}}</option>
+            </select>
+          </div>
+        </div>
+
+        <h3>Contact Information</h3>
+        <div class="contact-section">
+          <h4>Primary Contact</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="primaryContactName">Name</label>
+              <input type="text" id="primaryContactName" [(ngModel)]="formData.primaryContact.name" name="primaryContactName" required>
+            </div>
+
+            <div class="form-group">
+              <label for="primaryContactDesignation">Designation</label>
+              <input type="text" id="primaryContactDesignation" [(ngModel)]="formData.primaryContact.designation" name="primaryContactDesignation" required>
+            </div>
+
+            <div class="form-group">
+              <label for="primaryContactEmail">Email</label>
+              <input type="email" id="primaryContactEmail" [(ngModel)]="formData.primaryContact.email" name="primaryContactEmail" required>
+            </div>
+
+            <div class="form-group">
+              <label for="primaryContactPhone">Phone Number</label>
+              <input type="tel" id="primaryContactPhone" [(ngModel)]="formData.primaryContact.phoneNumber" name="primaryContactPhone" required>
+            </div>
+          </div>
+
+          <h4>Secondary Contact</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="secondaryContactName">Name</label>
+              <input type="text" id="secondaryContactName" [(ngModel)]="formData.secondaryContact.name" name="secondaryContactName" required>
+            </div>
+
+            <div class="form-group">
+              <label for="secondaryContactDesignation">Designation</label>
+              <input type="text" id="secondaryContactDesignation" [(ngModel)]="formData.secondaryContact.designation" name="secondaryContactDesignation" required>
+            </div>
+
+            <div class="form-group">
+              <label for="secondaryContactEmail">Email</label>
+              <input type="email" id="secondaryContactEmail" [(ngModel)]="formData.secondaryContact.email" name="secondaryContactEmail" required>
+            </div>
+
+            <div class="form-group">
+              <label for="secondaryContactPhone">Phone Number</label>
+              <input type="tel" id="secondaryContactPhone" [(ngModel)]="formData.secondaryContact.phoneNumber" name="secondaryContactPhone" required>
+            </div>
+          </div>
+        </div>
+
+        <h3>Regulatory Compliance</h3>
+        <div class="checkbox-group">
+          <h4>Applicable Regulatory Frameworks</h4>
+          <div class="checkbox-grid">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.rbi" name="rbi">
+              RBI Guidelines
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.sebi" name="sebi">
+              SEBI Guidelines
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.hipaa" name="hipaa">
+              HIPAA
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.dpdp" name="dpdp">
+              DPDP Act 2023
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.gdpr" name="gdpr">
+              GDPR
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.certIn" name="certIn">
+              CERT-In
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.iso" name="iso">
+              ISO 27001
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.nist" name="nist">
+              NIST Framework
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.regulatoryFrameworks.irdai" name="irdai">
+              IRDAI
+            </label>
+          </div>
+        </div>
+
+        <h3>Governance Documents</h3>
+        <div class="radio-group">
+          <h4>Do you have a Incident Response/Management Plan (IRP/IMP)</h4>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.irp" name="irp" value="yes">
+              Yes
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.irp" name="irp" value="no">
+              No
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.irp" name="irp" value="inProgress">
+              In Progress
+            </label>
+          </div>
+          <div class="file-upload" *ngIf="formData.irp === 'yes'">
+            <label for="irpFile">Upload IRP Document</label>
+            <input type="file" id="irpFile" (change)="handleFileUpload($event, 'irpFile')" accept=".pdf,.doc,.docx">
+          </div>
+        </div>
+
+        <div class="radio-group">
+          <h4>Business Continuity Plan (BCP) / Disaster Recovery Plan (DRP)</h4>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.bcpDrp" name="bcpDrp" value="yes">
+              Yes
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.bcpDrp" name="bcpDrp" value="no">
+              No
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.bcpDrp" name="bcpDrp" value="inProgress">
+              In Progress
+            </label>
+          </div>
+          <div class="file-upload" *ngIf="formData.bcpDrp === 'yes'">
+            <label for="bcpDrpFile">Upload BCP/DRP Document</label>
+            <input type="file" id="bcpDrpFile" (change)="handleFileUpload($event, 'bcpDrpFile')" accept=".pdf,.doc,.docx">
+          </div>
+        </div>
+      </section>
+
+      <!-- 2️⃣ Tech Defence measures -->
+      <section class="form-section">
+        <h2><span class="section-number">2️⃣</span> Tech Defence measures</h2>
+
+        <div class="radio-group">
+          <h3>Do you have an Incident Response Team (IRT)?</h3>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.irt" name="irt" value="inhouse">
+              Yes, In-house IRT
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.irt" name="irt" value="outsourced">
+              Yes, Outsourced
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.irt" name="irt" value="no">
+              No
+            </label>
+          </div>
+        </div>
+
+        <div class="checkbox-group">
+          <h3>Security Controls Currently Implemented</h3>
+          <div class="checkbox-grid">
+            <label class="checkbox-label" *ngFor="let control of securityControlsList">
+              <input type="checkbox" [(ngModel)]="formData.securityControls[control.key]" [name]="control.key">
+              {{control.label}}
+            </label>
+          </div>
+        </div>
+
+        <div class="radio-group">
+          <h3>Do you have a Security Operations Center (SOC)?</h3>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.soc" name="soc" value="inhouse">
+              Yes, In-house SOC
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.soc" name="soc" value="outsourced">
+              Yes, Outsourced
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.soc" name="soc" value="no">
+              No
+            </label>
+          </div>
+        </div>
+
+        <div class="radio-group">
+          <h3>Do you have Cyber Insurance?</h3>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.cyberInsurance" name="cyberInsurance" value="yes">
+              Yes
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.cyberInsurance" name="cyberInsurance" value="no">
+              No
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.cyberInsurance" name="cyberInsurance" value="inProcess">
+              In Process
+            </label>
+          </div>
+          <div class="file-upload" *ngIf="formData.cyberInsurance === 'yes'">
+            <label for="cyberInsuranceFile">Upload Cyber Insurance Policy</label>
+            <input type="file" id="cyberInsuranceFile" (change)="handleFileUpload($event, 'cyberInsuranceFile')" accept=".pdf,.doc,.docx">
+          </div>
+        </div>
+      </section>
+
+      <!-- 3️⃣ Incident & Crisis Management Preparedness -->
+      <section class="form-section">
+        <h2><span class="section-number">3️⃣</span> Incident & Crisis Management Preparedness</h2>
+
+        <div class="checkbox-group">
+          <h3>Security Policies</h3>
+          <div class="checkbox-grid">
+            <div class="policy-item">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="formData.policies.dataClassification" name="dataClassification">
+                Data Classification Policy
+              </label>
+              <div class="file-upload" *ngIf="formData.policies.dataClassification">
+                <label [for]="'policy_dataClassification'">Upload Policy Document</label>
+                <input 
+                  type="file" 
+                  [id]="'policy_dataClassification'" 
+                  (change)="handleFileUpload($event, 'policy_dataClassification')" 
+                  accept=".pdf,.doc,.docx"
+                >
+                <span class="file-name">{{getPolicyFileName('dataClassification')}}</span>
+              </div>
+            </div>
+
+            <div class="policy-item">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="formData.policies.accessControl" name="accessControl">
+                Access Control Policy
+              </label>
+              <div class="file-upload" *ngIf="formData.policies.accessControl">
+                <label [for]="'policy_accessControl'">Upload Policy Document</label>
+                <input 
+                  type="file" 
+                  [id]="'policy_accessControl'" 
+                  (change)="handleFileUpload($event, 'policy_accessControl')" 
+                  accept=".pdf,.doc,.docx"
+                >
+                <span class="file-name">{{getPolicyFileName('accessControl')}}</span>
+              </div>
+            </div>
+
+            <div class="policy-item">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="formData.policies.networkSecurity" name="networkSecurity">
+                Network Security Policy
+              </label>
+              <div class="file-upload" *ngIf="formData.policies.networkSecurity">
+                <label [for]="'policy_networkSecurity'">Upload Policy Document</label>
+                <input 
+                  type="file" 
+                  [id]="'policy_networkSecurity'" 
+                  (change)="handleFileUpload($event, 'policy_networkSecurity')" 
+                  accept=".pdf,.doc,.docx"
+                >
+                <span class="file-name">{{getPolicyFileName('networkSecurity')}}</span>
+              </div>
+            </div>
+
+            <div class="policy-item">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="formData.policies.hrSecurity" name="hrSecurity">
+                HR Security Policy
+              </label>
+              <div class="file-upload" *ngIf="formData.policies.hrSecurity">
+                <label [for]="'policy_hrSecurity'">Upload Policy Document</label>
+                <input 
+                  type="file" 
+                  [id]="'policy_hrSecurity'" 
+                  (change)="handleFileUpload($event, 'policy_hrSecurity')" 
+                  accept=".pdf,.doc,.docx"
+                >
+                <span class="file-name">{{getPolicyFileName('hrSecurity')}}</span>
+              </div>
+            </div>
+
+            <div class="policy-item">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="formData.policies.threatVulnerability" name="threatVulnerability">
+                Threat & Vulnerability Management Policy
+              </label>
+              <div class="file-upload" *ngIf="formData.policies.threatVulnerability">
+                <label [for]="'policy_threatVulnerability'">Upload Policy Document</label>
+                <input 
+                  type="file" 
+                  [id]="'policy_threatVulnerability'" 
+                  (change)="handleFileUpload($event, 'policy_threatVulnerability')" 
+                  accept=".pdf,.doc,.docx"
+                >
+                <span class="file-name">{{getPolicyFileName('threatVulnerability')}}</span>
+              </div>
+            </div>
+
+            <div class="policy-item">
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="formData.policies.supplierSecurity" name="supplierSecurity">
+                Supplier Security Policy
+              </label>
+              <div class="file-upload" *ngIf="formData.policies.supplierSecurity">
+                <label [for]="'policy_supplierSecurity'">Upload Policy Document</label>
+                <input 
+                  type="file" 
+                  [id]="'policy_supplierSecurity'" 
+                  (change)="handleFileUpload($event, 'policy_supplierSecurity')" 
+                  accept=".pdf,.doc,.docx"
+                >
+                <span class="file-name">{{getPolicyFileName('supplierSecurity')}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="radio-group">
+          <h3>What Kind of DR Site do you have?</h3>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.drSite" name="drSite" value="hotSite">
+              Hot Site
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.drSite" name="drSite" value="warmSite">
+              Warm Site
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.drSite" name="drSite" value="coldSite">
+              Cold Site
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.drSite" name="drSite" value="none">
+              None
+            </label>
+          </div>
+        </div>
+
+        <div class="radio-group">
+          <h3>Do you have cloud-based infrastructure?</h3>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.cloudInfrastructure" name="cloudInfrastructure" value="yes">
+              Yes
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.cloudInfrastructure" name="cloudInfrastructure" value="partial">
+              Partial
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.cloudInfrastructure" name="cloudInfrastructure" value="onPrem">
+              Fully On Prem
+            </label>
+          </div>
+        </div>
+
+        <div class="radio-group">
+          <h3>Are there defined access controls for third-party vendors & supply chain partners?</h3>
+          <div class="radio-options">
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.vendorAccessControl" name="vendorAccessControl" value="wellDefined">
+              Yes, Well-Defined Policies
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.vendorAccessControl" name="vendorAccessControl" value="adhoc">
+              Adhoc Managed
+            </label>
+            <label class="radio-label">
+              <input type="radio" [(ngModel)]="formData.vendorAccessControl" name="vendorAccessControl" value="no">
+              No
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4️⃣ Cybersec Wholeness -->
+      <section class="form-section">
+        <h2><span class="section-number">4️⃣</span> Cybersec Wholeness</h2>
+
+        <div class="checkbox-group">
+          <h3>What type of Tabletop Exercise are you interested in?</h3>
+          <div class="checkbox-grid">
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.phishing" name="exercisePhishing">
+              Phishing
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.businessEmailCompromise" name="exerciseBusinessEmail">
+              Business Email Compromise
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.ceoFraud" name="exerciseCEOFraud">
+              CEO Fraud
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.ddos" name="exerciseDDOS">
+              DDoS
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.insiderThreat" name="exerciseInsiderThreat">
+              Insider Threat
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.applicationCompromise" name="exerciseAppCompromise">
+              Application Compromise
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.cyberEspionage" name="exerciseCyberEspionage">
+              Cyber Espionage Attack
+            </label>
+            <label class="checkbox-label">
+              <input type="checkbox" [(ngModel)]="formData.exerciseTypes.dataBreach" name="exerciseDataBreach">
+              Data Breach
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="additionalComments">Additional Comments / Requirements</label>
+          <textarea id="additionalComments" [(ngModel)]="formData.additionalComments" name="additionalComments" rows="4"></textarea>
+        </div>
+      </section>
+
+      <!-- 5️⃣ Approval & Agreement -->
+      <section class="form-section">
+        <h2><span class="section-number">5️⃣</span> Approval & Agreement</h2>
+
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="formData.participationAgreement" name="participationAgreement" required>
+            I confirm that our organization is willing to engage ESFlabs to conduct this cybersecurity exercise.
+          </label>
+        </div>
+
+        <div class="signature-block">
+          <div class="form-group">
+            <label for="signature">Digital Signature</label>
+            <input type="text" id="signature" [(ngModel)]="formData.signature" name="signature" required>
+          </div>
+          <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" [(ngModel)]="formData.date" name="date" required>
+          </div>
+        </div>
+
+        <p class="confidentiality-note">
+          NOTE: ESFlabs Undertakes to Protect The Confidentiality of Client Information.
+        </p>
+
+        <button type="submit" class="submit-btn" [disabled]="!onboardingForm.form.valid">
+          Submit Pre-Onboarding Form
+        </button>
+      </section>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,521 @@
+.dashboard-container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #CC649B 0%, #64CCC9 100%);
+      padding: 2rem;
+      color: #231651;
+    }
+
+    .dashboard-header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 0;
+      border-radius: 15px;
+      margin-bottom: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-bar {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .header-main {
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #231651;
+    }
+
+    .exercise-info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .badge {
+      background: #231651;
+      color: #64CCC9;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .exercise-name {
+      font-size: 1.2rem;
+      color: #231651;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .department-overview, .participant-list {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+      color: #231651;
+    }
+
+    .department-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .department-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1.5rem;
+      border-radius: 12px;
+    }
+
+    .department-card h3 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      color: #231651;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #231651;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #231651;
+      opacity: 0.8;
+    }
+
+    .nist-coverage h4 {
+      margin-bottom: 1rem;
+      color: #231651;
+    }
+
+    .coverage-bars {
+      display: grid;
+      gap: 0.5rem;
+    }
+
+    .coverage-bar {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .bar-label {
+      font-size: 0.9rem;
+      color: #231651;
+    }
+
+    .bar-container {
+      background: rgba(255, 255, 255, 0.1);
+      height: 8px;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .bar {
+      background: #231651;
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .bar-value {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.8rem;
+      color: #231651;
+    }
+
+    .participant-table {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(35, 22, 81, 0.1);
+    }
+
+    th {
+      font-weight: 600;
+      color: #231651;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-bar {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      height: 20px;
+      overflow: hidden;
+    }
+
+    .progress {
+      background: #231651;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64CCC9;
+      font-size: 0.8rem;
+      transition: width 0.3s ease;
+    }
+
+    .status-badge {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .status-badge.active {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4CAF50;
+    }
+
+    .status-badge.completed {
+      background: rgba(33, 150, 243, 0.2);
+      color: #2196F3;
+    }
+
+    .status-badge.not_started {
+      background: rgba(158, 158, 158, 0.2);
+      color: #9E9E9E;
+    }
+
+    /* Organization Performance Styles */
+    .org-performance {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 2rem;
+    }
+
+    .metric-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .metric-card {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1.5rem;
+      border-radius: 12px;
+      transition: transform 0.3s ease;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .metric-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .metric-header i {
+      font-size: 1.5rem;
+      color: #231651;
+    }
+
+    .metric-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #231651;
+    }
+
+    .metric-numbers {
+      text-align: center;
+    }
+
+    .primary-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #231651;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .secondary-numbers {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .active {
+      color: #4CAF50;
+    }
+
+    .completed {
+      color: #2196F3;
+    }
+
+    .trend {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.3rem;
+    }
+
+    .trend.up {
+      color: #4CAF50;
+    }
+
+    .trend.down {
+      color: #F44336;
+    }
+
+    .risk-badge {
+      display: inline-block;
+      padding: 0.5rem 1.5rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+
+    .risk-badge.low {
+      background: rgba(76, 175, 80, 0.2);
+      color: #4CAF50;
+    }
+
+    .risk-badge.medium {
+      background: rgba(255, 152, 0, 0.2);
+      color: #FF9800;
+    }
+
+    .risk-badge.high {
+      background: rgba(244, 67, 54, 0.2);
+      color: #F44336;
+    }
+
+    .org-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    .nist-maturity, .recent-incidents {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 1.5rem;
+      border-radius: 12px;
+    }
+
+    .maturity-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .maturity-item {
+      margin-bottom: 1rem;
+    }
+
+    .maturity-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .maturity-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .maturity-progress {
+      height: 100%;
+      background: #231651;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .incidents-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .incident {
+      display: flex;
+      gap: 1rem;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
+
+    .incident-time {
+      font-size: 0.9rem;
+      color: #231651;
+      opacity: 0.8;
+    }
+
+    .incident-details {
+      flex: 1;
+    }
+
+    .incident-type {
+      font-weight: 600;
+      color: #231651;
+    }
+
+    .incident-impact {
+      font-size: 0.9rem;
+      color: #F44336;
+    }
+
+    .incident-department {
+      font-size: 0.9rem;
+      color: #231651;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 1200px) {
+      .org-details {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        padding: 1rem;
+      }
+
+      .department-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .metric-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .org-details {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .client-selector {
+      position: relative;
+    }
+
+    .client-dropdown-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      color: #231651;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .client-dropdown-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .client-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      min-width: 250px;
+      z-index: 99999;
+    }
+
+    .select-all {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(35, 22, 81, 0.1);
+    }
+
+    .select-all label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #231651;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .client-list {
+      max-height: 250px;
+      overflow-y: auto;
+      padding: 0.5rem 0;
+    }
+
+    .client-item {
+      padding: 0.5rem 1rem;
+    }
+
+    .client-item label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #231651;
+      cursor: pointer;
+    }
+
+    .client-item:hover {
+      background: rgba(35, 22, 81, 0.05);
+    }
+
+    input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #231651;
+      border-radius: 4px;
+      cursor: pointer;
+    }

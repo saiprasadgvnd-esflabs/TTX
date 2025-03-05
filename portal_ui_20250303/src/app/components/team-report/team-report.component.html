@@ -1,0 +1,265 @@
+<div class="team-report-container">
+  <header class="report-header">
+    <h1>Team Performance Report</h1>
+    <div class="report-meta">
+      <span class="badge">Exercise: Supply Chain Attack Simulation</span>
+      <span class="badge" *ngIf="clientName">Client: {{clientName}}</span>
+      <span class="badge" *ngIf="report">Team Size: {{teamMembers.length}}</span>
+      <span class="badge" *ngIf="sessionId">Session ID: {{sessionId}}</span>
+    </div>
+  </header>
+
+  <!-- Team Selection - Only show if no session ID is provided -->
+  <div class="selection-container" *ngIf="!sessionId">
+    <div class="selection-controls">
+      <div class="select-group">
+        <label for="teamSelect">Select Team</label>
+        <div class="select-wrapper">
+          <select 
+            id="teamSelect" 
+            [(ngModel)]="selectedTeamId" 
+            (change)="onTeamChange()" 
+            [disabled]="isLoadingTeams">
+            <option *ngIf="isLoadingTeams" value="">Loading teams...</option>
+            <option *ngIf="!isLoadingTeams && teams.length === 0" value="">No teams available</option>
+            <option *ngFor="let team of teams" [value]="team.id">{{team.name}}</option>
+          </select>
+          <div class="loading-indicator" *ngIf="isLoadingTeams">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Selection - Show if session ID is provided -->
+  <div class="selection-container" *ngIf="sessionId && teams.length > 0">
+    <div class="selection-controls">
+      <div class="select-group">
+        <label for="teamSelect">Select Team</label>
+        <div class="select-wrapper">
+          <select 
+            id="teamSelect" 
+            [(ngModel)]="selectedTeamId" 
+            (change)="onTeamChange()" 
+            [disabled]="isLoadingTeams || isLoadingReport">
+            <option *ngIf="isLoadingTeams" value="">Loading teams...</option>
+            <option *ngIf="!isLoadingTeams && teams.length === 0" value="">No teams available</option>
+            <option *ngFor="let team of teams" [value]="team.id">{{team.name}}</option>
+          </select>
+          <div class="loading-indicator" *ngIf="isLoadingTeams || isLoadingReport">
+            <i class="fas fa-spinner fa-spin"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Auto-refresh indicator -->
+      <div class="refresh-info" *ngIf="sessionId && report">
+        <div class="refresh-status" [class.refreshing]="showRefreshIndicator">
+          <i class="fas" [class.fa-sync-alt]="!showRefreshIndicator" [class.fa-sync-alt]="showRefreshIndicator" [class.fa-spin]="showRefreshIndicator"></i>
+          <span *ngIf="!showRefreshIndicator">Auto-refreshing in {{getTimeUntilNextRefresh()}}</span>
+          <span *ngIf="showRefreshIndicator">Refreshing data...</span>
+        </div>
+        <button class="refresh-now-btn" (click)="manualRefresh()" [disabled]="isLoadingReport">
+          <i class="fas fa-sync-alt"></i> Refresh Now
+        </button>
+      </div>
+    </div>
+    
+    <!-- Last updated timestamp -->
+    <div class="last-updated" *ngIf="lastRefreshTime">
+      Last updated: {{lastRefreshTime | date:'medium'}}
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoadingReport && !report">
+    <div class="spinner"></div>
+    <p>Loading team report...</p>
+  </div>
+
+  <!-- Report Content - Only show when report is loaded -->
+  <div *ngIf="report && !isLoadingReport">
+    <!-- Summary Stats -->
+    <section class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{getAverageScore() | number:'1.0-0'}}%</span>
+          <span class="stat-label">Average Score</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{getAverageResponseTime()}}s</span>
+          <span class="stat-label">Avg Response Time</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-bullseye"></i>
+        </div>
+        <div class="stat-content">
+          <span class="stat-value">{{getAverageAccuracy()}}%</span>
+          <span class="stat-label">Decision Accuracy</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Performance Charts -->
+    <section class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>Individual Performance</h2>
+          <div class="chart-legend">
+            <span class="legend-item">
+              <i class="fas fa-square"></i> Score
+            </span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div echarts [options]="performanceChartOption" class="chart"></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>Response Time Trends</h2>
+          <div class="chart-legend">
+            <span class="legend-item">
+              <i class="fas fa-line-chart"></i> Time (s)
+            </span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div echarts [options]="responseTimeChartOption" class="chart"></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>NIST Framework Coverage</h2>
+          <div class="chart-legend">
+            <span class="legend-item">
+              <i class="fas fa-shield-alt"></i> Coverage
+            </span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div echarts [options]="nistRadarChartOption" class="chart"></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <div class="chart-header">
+          <h2>Decision Distribution</h2>
+          <div class="chart-legend">
+            <span class="legend-item">
+              <i class="fas fa-th"></i> Correct Decisions
+            </span>
+          </div>
+        </div>
+        <div class="chart-container">
+          <div echarts [options]="decisionTreeMapOption" class="chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SWOT Analysis -->
+    <section class="swot-analysis">
+      <h2>SWOT Analysis</h2>
+      <div class="swot-container">
+        <div class="chart-container">
+          <div echarts [options]="swotHeatmapOption" class="chart"></div>
+        </div>
+        <div class="swot-legend">
+          <div class="legend-item">
+            <div class="legend-color strength"></div>
+            <span>High Performance (80-100%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color neutral"></div>
+            <span>Moderate (70-79%)</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color weakness"></div>
+            <span>Needs Improvement (0-69%)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Members Table -->
+    <section class="team-members">
+      <h2>Team Member Details</h2>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Score</th>
+              <th>Response Time</th>
+              <th>Exercises</th>
+              <th>Accuracy</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let member of teamMembers">
+              <td>{{member.user_name}}</td>
+              <td>{{member.role}}</td>
+              <td>
+                <span class="score" [style.color]="getScoreColor(member.score)">
+                  {{member.score}}%
+                </span>
+              </td>
+              <td>{{member.response_time}}</td>
+              <td>{{member.exercises}}</td>
+              <td>
+                <div class="progress-bar">
+                  <div class="progress" 
+                       [style.width.%]="parseAccuracy(member.accuracy)"
+                       [style.background-color]="getScoreColor(parseAccuracy(member.accuracy))">
+                    {{member.accuracy}}
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Action Buttons -->
+    <section class="actions">
+      <button class="action-btn primary" (click)="downloadReport()">
+        <i class="fas fa-download"></i>
+        Download CSV Report
+      </button>
+      <button class="action-btn secondary" (click)="shareReport()">
+        <i class="fas fa-share"></i>
+        Share Report
+      </button>
+      <button class="action-btn tertiary" (click)="downloadPDF()">
+        <i class="fas fa-file-pdf"></i>
+        Download PDF
+      </button>
+    </section>
+  </div>
+
+  <!-- No Data State -->
+  <div class="no-data-container" *ngIf="!report && !isLoadingReport && selectedTeamId">
+    <div class="no-data-message">
+      <i class="fas fa-chart-bar"></i>
+      <h2>No Report Data Available</h2>
+      <p>There is no report data available for the selected team. Please select a different team or try again later.</p>
+    </div>
+  </div>
+</div>

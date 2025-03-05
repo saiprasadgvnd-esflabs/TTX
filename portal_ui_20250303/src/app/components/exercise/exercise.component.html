@@ -1,0 +1,126 @@
+<div class="exercise-container" *ngIf="exerciseData">
+  <div class="timer-bar" *ngIf="started" [style.width]="timerPercentage + '%'" [class.warning]="timerPercentage < 50" [class.danger]="timerPercentage < 20"></div>
+  
+  <div class="status-container" *ngIf="started">
+    <div class="timer-display" [class.warning]="timerPercentage < 50" [class.danger]="timerPercentage < 20">
+      <i class="fas fa-clock"></i>
+      <span class="time-value">{{remainingMinutes}}:{{remainingSeconds}}</span>
+    </div>
+    
+    <div class="amount-display" [class.blink]="timerPercentage < 20">
+      <i class="fas fa-sack-dollar"></i>
+      <span class="amount-value">${{currentAmount | number}}</span>
+      <div class="amount-change" *ngIf="showAmountChange">
+        <span class="amount-change-text" [class.increase]="amountChangeType === 'increase'" [class.decrease]="amountChangeType === 'decrease'">
+          {{amountChangeType === 'increase' ? '+20%' : '-10%'}}
+        </span>
+        <span class="amount-change-value" [class.increase]="amountChangeType === 'increase'" [class.decrease]="amountChangeType === 'decrease'">
+          {{amountChangeType === 'increase' ? 'Lost' : 'Saved'}} ${{Math.abs(amountDifference) | number}}
+        </span>
+      </div>
+    </div>
+    
+    <!-- Mute Button -->
+    <button class="mute-button" (click)="toggleMute()">
+      <i class="fas" [ngClass]="isMuted ? 'fa-volume-mute' : 'fa-volume-up'"></i>
+    </button>
+  </div>
+
+  <div class="exercise-content" *ngIf="!started">
+    <div class="header">
+      <h1>{{exerciseData.exercise.name}}</h1>
+      <div class="meta-info">
+        <span class="time">Time: {{exerciseData.exercise.time}} minutes</span>
+        <span class="amount">Amount: ${{exerciseData.exercise.simulated_amount | number}}</span>
+      </div>
+    </div>
+    
+    <div class="scenario-info">
+      <h2>{{exerciseData.scenario.title}}</h2>
+      <p class="typing-text" [class.reading]="isReadingDescription">{{descriptionText$ | async}}</p>
+    </div>
+
+    <button class="start-btn" (click)="startExercise()" [disabled]="!canStartExercise">
+      {{canStartExercise ? 'Start Exercise' : 'Please wait...'}}
+    </button>
+    
+    <!-- Mute Button for initial screen -->
+    <button class="mute-button initial-mute" (click)="toggleMute()">
+      <i class="fas" [ngClass]="isMuted ? 'fa-volume-mute' : 'fa-volume-up'"></i>
+      <span>{{isMuted ? 'Unmute' : 'Mute'}} Audio</span>
+    </button>
+  </div>
+
+  <div class="exercise-flow" *ngIf="started">
+    <div class="inject-content" *ngIf="currentInject">
+      <div class="inject-header">
+        <span class="inject-badge">Inject {{currentInjectIndex + 1}}</span>
+        <h1 class="inject-title">{{currentInject.name}}</h1>
+      </div>
+      
+      <div class="inject-description">
+        <div class="description-section situation" *ngIf="currentInject.description.situation.type === 'external'">
+          <div class="section-header">
+            <i class="fas fa-exclamation-circle"></i>
+            <h3>Situation</h3>
+          </div>
+          <div class="section-content">
+            <p class="typing-text" [class.reading]="isReadingInject">{{injectText$ | async}}</p>
+          </div>
+        </div>
+        
+        <!-- Removed Impact and Action Required sections -->
+      </div>
+
+      <div class="questions" *ngIf="currentInject.scenario_inject_question?.questions?.length > 0">
+        <div class="question-box">
+          <div class="nist-frameworks" *ngIf="getCurrentQuestionNistFrameworks().length > 0">
+            <div class="nist-label">NIST Framework Phases:</div>
+            <div class="nist-badges">
+              <span class="nist-badge" *ngFor="let nist of getCurrentQuestionNistFrameworks()">
+                {{nist.name}}
+              </span>
+            </div>
+          </div>
+
+          <div class="question-counter">
+            Question {{currentQuestionIndex + 1}} of {{currentInject.scenario_inject_question.questions.length}}
+          </div>
+          
+          <h2 class="question-text">{{questionText$ | async}}</h2>
+          
+          <div class="options">
+            <div *ngFor="let option of currentInject.scenario_inject_question.questions[currentQuestionIndex].options; let i = index" class="option">
+              <button 
+                [class.selected]="isOptionSelected(currentInject.scenario_inject_question.questions[currentQuestionIndex].id, option)"
+                [class.correct]="showAnswer && option.is_correct"
+                [class.incorrect]="showAnswer && isOptionSelected(currentInject.scenario_inject_question.questions[currentQuestionIndex].id, option) && !option.is_correct"
+                (click)="selectOption(currentInject.scenario_inject_question.questions[currentQuestionIndex].id, option)"
+                [disabled]="showAnswer || !typedOptions[i] || isReadingInject"
+              >
+                <span>{{typedOptions[i] || ''}}</span>
+                <span class="feedback-icon" *ngIf="showAnswer">
+                  <i class="fas" [class.fa-check]="option.is_correct" [class.fa-times]="!option.is_correct && isOptionSelected(currentInject.scenario_inject_question.questions[currentQuestionIndex].id, option)"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="submit-section" *ngIf="hasSelectedOption() && !showAnswer">
+            <button class="submit-btn" (click)="submitAnswer()">Submit Answer</button>
+          </div>
+
+          <div class="feedback-message" *ngIf="showAnswer">
+            <p [class.correct-message]="isAnswerCorrect()" [class.incorrect-message]="!isAnswerCorrect()">
+              <i class="fas" [class.fa-check-circle]="isAnswerCorrect()" [class.fa-times-circle]="!isAnswerCorrect()"></i>
+              {{isAnswerCorrect() ? 'Correct!' : 'Incorrect. Try to understand why the correct answer is better.'}}
+            </p>
+            <button class="continue-btn" (click)="continueToNext()">
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -17,10 +17,12 @@ router.post("/", async (req: any, res: any) => {
     if (clientCheck.rows.length === 0) {
       return res.status(404).json({ error: "Client ID does not exist" });
     }
-
+    var last_id_result = await pool.query(`select max(id) as id from roles`);
+    console.log(last_id_result.rows)
+    var id = last_id_result.rows[0].id + 1;
     const result = await pool.query<Role>(
-      "INSERT INTO public.roles (client_id, name) VALUES ($1, $2) RETURNING *",
-      [client_id, name]
+      "INSERT INTO public.roles (id,client_id, name) VALUES ($1, $2, $3) RETURNING *",
+      [id,client_id, name]
     );
 
     res.status(201).json({ message: "Role created", role: result.rows[0] });

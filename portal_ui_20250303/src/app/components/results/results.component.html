@@ -1,0 +1,215 @@
+<div class="results-container" *ngIf="!loading && !error && sessionResult">
+  <div class="results-header">
+    <img src="https://esflabs.ai/logo.svg" alt="ESF Labs" class="logo">
+    <h1>Exercise Results</h1>
+    <div class="exercise-info">
+      <span class="badge">{{sessionResult.exercise_name}}</span>
+      <span class="completion-time">{{sessionResult.time_spent}}</span>
+    </div>
+  </div>
+
+  <div class="results-content">
+    <!-- Summary Cards -->
+    <div class="summary-grid">
+      <div class="summary-card">
+        <div class="card-icon">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="card-content">
+          <div class="card-value">{{getAccuracyPercentage() | number:'1.0-0'}}<span class="percentage">%</span></div>
+          <div class="card-label">Overall Score</div>
+          <div class="card-trend" [class.positive]="sessionResult.correct_answers > sessionResult.wrong_answers" [class.negative]="sessionResult.correct_answers <= sessionResult.wrong_answers">
+            <i class="fas" [class.fa-arrow-up]="sessionResult.correct_answers > sessionResult.wrong_answers" [class.fa-arrow-down]="sessionResult.correct_answers <= sessionResult.wrong_answers"></i>
+            {{sessionResult.correct_answers}}/{{sessionResult.total_questions}} correct answers
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="card-content">
+          <div class="card-value">{{sessionResult.time_spent}}</div>
+          <div class="card-label">Time Spent</div>
+          <div class="card-trend">
+            <i class="fas fa-info-circle"></i>
+            Average response time
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="card-content">
+          <div class="card-value">{{sessionResult.correct_answers}}/{{sessionResult.total_questions}}</div>
+          <div class="card-label">Critical Decisions</div>
+          <div class="card-trend" [class.positive]="sessionResult.correct_answers > sessionResult.wrong_answers">
+            <i class="fas" [class.fa-check]="sessionResult.correct_answers > sessionResult.wrong_answers" [class.fa-times]="sessionResult.correct_answers <= sessionResult.wrong_answers"></i>
+            {{sessionResult.correct_answers > sessionResult.wrong_answers ? 'Above threshold' : 'Below threshold'}}
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="card-icon">
+          <i class="fas fa-sack-dollar"></i>
+        </div>
+        <div class="card-content">
+          <div class="card-value">{{formatCurrency(sessionResult.base_amount - sessionResult.final_amount)}}</div>
+          <div class="card-label">Amount Saved</div>
+          <div class="card-trend positive">
+            <i class="fas fa-arrow-up"></i>
+            {{((sessionResult.base_amount - sessionResult.final_amount) / sessionResult.base_amount * 100) | number:'1.0-0'}}% efficiency
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detailed Analysis -->
+    <div class="detailed-analysis">
+      <h2>Performance Analysis</h2>
+      
+      <div class="analysis-grid">
+        <!-- Response Time Chart -->
+        <div class="analysis-section">
+          <div class="section-header">
+            <h3>Response Time Distribution</h3>
+            <div class="section-info">
+              <i class="fas fa-info-circle"></i>
+              <span class="tooltip">Shows your response time for each question</span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div echarts [options]="responseTimeChartOptions" class="chart"></div>
+          </div>
+          <div class="insight-box">
+            <i class="fas fa-lightbulb"></i>
+            <p>{{sessionResult.time_insignt}}</p>
+          </div>
+        </div>
+
+        <!-- NIST Framework Coverage -->
+        <div class="analysis-section">
+          <div class="section-header">
+            <h3>NIST Framework Coverage</h3>
+            <div class="section-info">
+              <i class="fas fa-info-circle"></i>
+              <span class="tooltip">Your proficiency across NIST cybersecurity domains</span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div echarts [options]="nistRadarChartOptions" class="chart"></div>
+          </div>
+          <div class="insight-box">
+            <i class="fas fa-lightbulb"></i>
+            <p>{{sessionResult.nist_insight}}</p>
+          </div>
+        </div>
+
+        <!-- Financial Impact Analysis -->
+        <div class="analysis-section">
+          <div class="section-header">
+            <h3>Financial Impact Analysis</h3>
+            <div class="section-info">
+              <i class="fas fa-info-circle"></i>
+              <span class="tooltip">Breakdown of financial implications of your decisions</span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div echarts [options]="financialImpactOptions" class="chart"></div>
+          </div>
+          <div class="insight-box">
+            <i class="fas fa-lightbulb"></i>
+            <p>{{sessionResult.finincial_impact_insight}}</p>
+          </div>
+        </div>
+
+        <!-- Individual SWOT Analysis - Moved adjacent to Financial Impact Analysis -->
+        <div class="analysis-section swot-section" *ngIf="sessionResult.swot_analysis">
+          <div class="section-header">
+            <h3>Individual SWOT Analysis</h3>
+            <div class="section-info">
+              <i class="fas fa-info-circle"></i>
+              <span class="tooltip">Your performance across different types of cybersecurity challenges</span>
+            </div>
+          </div>
+          <div class="chart-container">
+            <div echarts [options]="swotChartOptions" class="chart"></div>
+          </div>
+          <div class="insight-box">
+            <i class="fas fa-lightbulb"></i>
+            <p>Higher scores in Strengths and Opportunities indicate areas where you excel, while lower scores in Weaknesses and Threats highlight areas for improvement.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Learnings -->
+    <div class="key-learnings">
+      <h2>Key Learnings & Recommendations</h2>
+      <div class="learning-grid">
+        <div class="learning-card strength">
+          <div class="card-header">
+            <i class="fas fa-check-circle"></i>
+            <h4>Strengths</h4>
+          </div>
+          <p>{{sessionResult.strengths}}</p>
+        </div>
+
+        <div class="learning-card improvement">
+          <div class="card-header">
+            <i class="fas fa-arrow-up"></i>
+            <h4>Areas for Improvement</h4>
+          </div>
+          <p>{{sessionResult.area_of_improvement}}</p>
+        </div>
+
+        <div class="learning-card action">
+          <div class="card-header">
+            <i class="fas fa-tasks"></i>
+            <h4>Recommended Actions</h4>
+          </div>
+          <p>{{sessionResult.recommended_actions}}</p>
+        </div>
+
+        <div class="learning-card resources">
+          <div class="card-header">
+            <i class="fas fa-book"></i>
+            <h4>References</h4>
+          </div>
+          <p>{{sessionResult.references}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="primary-btn" (click)="retryExercise()">
+        <i class="fas fa-redo"></i> Retry Exercise
+      </button>
+      <button class="secondary-btn" (click)="downloadReport()">
+        <i class="fas fa-download"></i> Download Detailed Report
+      </button>
+      <button class="tertiary-btn" (click)="shareResults()">
+        <i class="fas fa-share"></i> Share Results
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="loading">
+  <div class="spinner"></div>
+  <p>Loading results...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="error">
+  <i class="fas fa-exclamation-circle"></i>
+  <h2>Results Not Available</h2>
+  <p>{{error}}</p>
+  <button class="primary-btn" (click)="retryExercise()">Return to Exercise</button>
+</div>

@@ -1,0 +1,275 @@
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.logo {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    z-index: 2;
+}
+
+.logo-image {
+    height: 70px;
+    width: auto;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+    font-weight: 700;
+}
+
+h2 {
+    color: #34495e;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-group p {
+    color: #3498db;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+label {
+    display: block;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem;
+    background: #ffffff;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    color: #2c3e50;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+input::placeholder {
+    color: #95a5a6;
+}
+
+select {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232c3e50'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+
+select option {
+    background: #FFFFFF;
+    color: #2c3e50;
+}
+
+button {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(45deg, #3498db, #2c3e50);
+    border: none;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: linear-gradient(45deg, #bdc3c7, #95a5a6);
+}
+
+/* Scenario text styling */
+.scenario-text {
+    color: #3498db;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    margin-bottom: 0.5rem;
+    word-break: break-word;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 0;
+        background: linear-gradient(145deg, #2c3e50 0%, #3498db 100%);
+        display: block;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling for iOS */
+    }
+    
+    .logo {
+        position: static;
+        display: flex;
+        justify-content: center;
+        margin: 2rem 0 1rem;
+        width: 100%;
+    }
+    
+    .logo-image {
+        height: 60px;
+    }
+    
+    .login-box {
+        max-width: 100%;
+        width: 100%;
+        min-height: calc(100vh - 100px);
+        border-radius: 20px 20px 0 0;
+        margin: 0;
+        padding: 1.5rem;
+        box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.2);
+        background: #ffffff;
+        -webkit-backdrop-filter: blur(10px); /* iOS support */
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+        margin-top: 0.5rem;
+    }
+    
+    h2 {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.2rem;
+    }
+    
+    input, select {
+        padding: 0.85rem;
+        font-size: 1rem;
+        border-radius: 10px;
+        border: 1.5px solid #bdc3c7;
+        background: #f8f9fa;
+        -webkit-appearance: none; /* Remove iOS default styling */
+        font-size: 16px; /* Prevent iOS zoom on focus */
+    }
+    
+    label {
+        font-size: 0.95rem;
+        margin-bottom: 0.4rem;
+    }
+    
+    button {
+        padding: 0.9rem;
+        border-radius: 25px;
+        margin-top: 1.5rem;
+        font-size: 1.1rem;
+        background: linear-gradient(45deg, #3498db, #2980b9);
+        box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+        -webkit-tap-highlight-color: transparent; /* Remove tap highlight on iOS */
+        -webkit-touch-callout: none; /* Disable callout on iOS */
+    }
+    
+    .scenario-text {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        padding: 0.75rem;
+        background: rgba(52, 152, 219, 0.1);
+        border-radius: 8px;
+        margin-bottom: 0.8rem;
+    }
+}
+
+@media (max-width: 360px) {
+    .login-box {
+        padding: 1.2rem;
+    }
+    
+    h1 {
+        font-size: 1.6rem;
+    }
+    
+    h2 {
+        font-size: 1rem;
+    }
+    
+    .logo-image {
+        height: 50px;
+    }
+    
+    input, select, button {
+        padding: 0.8rem;
+        font-size: 16px; /* Keep 16px to prevent zoom on iOS */
+    }
+    
+    /* Add safe area inset padding for iPhone X and newer */
+    .login-box {
+        padding-bottom: calc(1.2rem + env(safe-area-inset-bottom));
+    }
+}
+
+/* iPhone-specific optimizations */
+@supports (-webkit-touch-callout: none) {
+    /* iOS-specific styles */
+    .login-box {
+        padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    }
+    
+    button {
+        margin-bottom: env(safe-area-inset-bottom);
+    }
+    
+    /* Fix for iOS form elements */
+    input, select {
+        border-radius: 8px;
+        background-color: #ffffff;
+    }
+    
+    /* Fix for iOS button appearance */
+    button {
+        -webkit-appearance: none;
+        border-radius: 25px;
+    }
+}

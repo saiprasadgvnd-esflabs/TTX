@@ -1,0 +1,686 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #CC649B 0%, #64CCC9 100%);
+  padding: 2rem;
+  color: #231651;
+}
+
+.dashboard-header {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  padding: 2rem;
+}
+
+.header-main {
+  text-align: center;
+}
+
+h1 {
+  color: #231651;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.exercise-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.badge {
+  background: #231651;
+  color: #64CCC9;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.exercise-name {
+  color: #231651;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+/* NIST Timeline Section */
+.nist-timeline {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.phases-container {
+  position: relative;
+  padding: 2rem 0;
+}
+
+.progress-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(35, 22, 81, 0.2);
+  transform: translateY(-50%);
+}
+
+.flight-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  z-index: 10;
+  transition: all 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flight-name {
+  position: absolute;
+  top: -25px;
+  background: rgba(35, 22, 81, 0.9);
+  color: #64CCC9;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.flight-indicator:hover .flight-name {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.flight-indicator i {
+  font-size: 2rem;
+  color: #231651;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  transition: all 0.5s ease-in-out;
+}
+
+/* Flight states */
+.flight-indicator.grounded i {
+  transform: rotate(0deg);
+  animation: taxiAnimation 2s infinite ease-in-out;
+}
+
+.flight-indicator.flying i {
+  transform: rotate(0deg);
+  animation: flyingAnimation 2s infinite ease-in-out;
+}
+
+.flight-indicator.takeoff {
+  transform: translateY(-100%) translateX(-50%);
+  animation: departureAnimation 2s forwards;
+}
+
+.flight-indicator.takeoff i {
+  transform: rotate(-45deg);
+  animation: takeoffAnimation 2s forwards;
+}
+
+/* Phase Nodes */
+.phase-nodes {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 5;
+}
+
+.phase-node {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.node-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.node-icon {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #231651;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.node-icon::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.node-icon:hover::after {
+  opacity: 1;
+}
+
+.node-icon i {
+  font-size: 1.2rem;
+  color: #231651;
+}
+
+.progress-circle {
+  position: relative;
+  width: 36px;
+  height: 36px;
+}
+
+.progress-circle svg {
+  transform: rotate(-90deg);
+}
+
+.progress-circle path {
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #231651;
+}
+
+.node-label {
+  font-weight: 600;
+  color: #231651;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.phase-node.active .node-icon {
+  background: rgba(35, 22, 81, 0.9);
+  transform: scale(1.1);
+}
+
+.phase-node.active .node-icon i {
+  color: #64CCC9;
+  animation: pulseIcon 2s infinite;
+}
+
+.phase-node.completed .node-icon {
+  background: #231651;
+}
+
+.phase-node.completed .node-icon i {
+  color: #64CCC9;
+}
+
+/* Team Bubbles */
+.team-bubbles {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.team-bubble {
+  width: 180px;
+  height: 180px;
+  position: relative;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.bubble-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  padding: 1rem;
+}
+
+.team-name {
+  color: #231651;
+  font-weight: 600;
+  text-align: center;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  z-index: 2;
+}
+
+.money-info {
+  text-align: center;
+  z-index: 2;
+  margin-bottom: 0.5rem;
+}
+
+.net-amount {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.net-amount.positive {
+  color: #4CAF50;
+}
+
+.net-amount.negative {
+  color: #FF4136;
+}
+
+.money-details {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.money-details .saved {
+  color: #4CAF50;
+  margin-bottom: 0.1rem;
+}
+
+.money-details .lost {
+  color: #FF4136;
+}
+
+.team-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(180deg, rgba(100, 204, 201, 0.5) 0%, rgba(100, 204, 201, 0.8) 100%);
+  transition: height 0.5s ease;
+}
+
+.wave::before,
+.wave::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background-repeat: repeat-x;
+  animation: waveAnimation 10s linear infinite;
+}
+
+.wave::before {
+  top: -25%;
+  border-radius: 40%;
+  opacity: 0.5;
+}
+
+.wave::after {
+  top: -50%;
+  border-radius: 35%;
+  opacity: 0.3;
+}
+
+.team-bubble.success .wave {
+  background: linear-gradient(180deg, rgba(76, 175, 80, 0.5) 0%, rgba(76, 175, 80, 0.8) 100%);
+}
+
+.team-bubble.failed .wave {
+  background: linear-gradient(180deg, rgba(255, 65, 54, 0.5) 0%, rgba(255, 65, 54, 0.8) 100%);
+}
+
+.team-bubble.pending .wave {
+  background: linear-gradient(180deg, rgba(158, 158, 158, 0.5) 0%, rgba(158, 158, 158, 0.8) 100%);
+}
+
+/* Team Performance Section */
+.team-performance {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.team-performance h2 {
+  color: #231651;
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.team-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.team-card {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.team-card:hover {
+  transform: translateY(-5px);
+}
+
+.team-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.team-header i {
+  font-size: 1.5rem;
+  color: #231651;
+}
+
+.team-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #231651;
+  font-weight: 600;
+}
+
+.team-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #231651;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: #231651;
+  opacity: 0.8;
+}
+
+.phase-status {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.75rem;
+  border-radius: 25px;
+}
+
+.status-bubble {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.status-bubble .bubble-label {
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes pulseIcon {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes taxiAnimation {
+  0%, 100% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+}
+
+@keyframes flyingAnimation {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(0deg); }
+}
+
+@keyframes takeoffAnimation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-45deg) scale(0.8); }
+}
+
+@keyframes departureAnimation {
+  0% { 
+    transform: translateY(-50%) translateX(-50%);
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(-200%) translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes waveAnimation {
+  0% {
+    transform: translateX(0) translateZ(0) scaleY(1);
+  }
+  50% {
+    transform: translateX(-25%) translateZ(0) scaleY(0.8);
+  }
+  100% {
+    transform: translateX(-50%) translateZ(0) scaleY(1);
+  }
+}
+
+/* Celebration Effects */
+.celebration {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.top-celebration {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: space-around;
+}
+
+.popper {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #64CCC9;
+  border-radius: 50%;
+  opacity: 0;
+  animation: popperBurst 5s ease-out infinite;
+}
+
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  opacity: 0;
+  animation: confettiDrop 5s ease-in-out infinite;
+}
+
+@keyframes popperBurst {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  40% {
+    transform: translateY(30vh) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes confettiDrop {
+  0% {
+    transform: translate(0, -50vh) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), 100vh) rotate(var(--r));
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .team-cards {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .team-bubbles {
+    gap: 1.5rem;
+  }
+  
+  .team-bubble {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .dashboard-header {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .nist-timeline {
+    padding: 1.5rem;
+  }
+
+  .node-label {
+    font-size: 0.8rem;
+  }
+
+  .team-performance {
+    padding: 1.5rem;
+  }
+
+  .team-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .team-card {
+    padding: 1rem;
+  }
+
+  .team-bubbles {
+    gap: 1rem;
+  }
+
+  .team-bubble {
+    width: 120px;
+    height: 120px;
+  }
+
+  .team-name {
+    font-size: 0.9rem;
+  }
+
+  .net-amount {
+    font-size: 1rem;
+  }
+
+  .money-details {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .phase-nodes {
+    overflow-x: auto;
+    padding-bottom: 1rem;
+  }
+
+  .team-bubbles {
+    gap: 0.8rem;
+  }
+
+  .team-bubble {
+    width: 100px;
+    height: 100px;
+  }
+}

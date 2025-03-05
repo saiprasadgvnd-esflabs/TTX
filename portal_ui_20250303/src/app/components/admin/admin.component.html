@@ -1,0 +1,592 @@
+<div class="admin-container">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div class="header-main">
+        <h1>Admin Dashboard</h1>
+        <div class="tabs">
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'clients'"
+            (click)="setActiveTab('clients')"
+          >
+            Clients
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'roles'"
+            (click)="setActiveTab('roles')"
+          >
+            Roles
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'teams'"
+            (click)="setActiveTab('teams')"
+          >
+            Teams
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'exercises'"
+            (click)="setActiveTab('exercises')"
+          >
+            Exercises
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'scenarios'"
+            (click)="setActiveTab('scenarios')"
+          >
+            Scenarios
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'injects'"
+            (click)="setActiveTab('injects')"
+          >
+            Injects
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'questions'"
+            (click)="setActiveTab('questions')"
+          >
+            Questions
+          </button>
+          <button
+            class="tab-button"
+            [class.active]="activeTab === 'sessions'"
+            (click)="setActiveTab('sessions')"
+          >
+            Sessions
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clients Section -->
+  <app-client-management 
+    *ngIf="activeTab === 'clients'"
+    [clients]="clients"
+    (addClient)="openForm('client')"
+    (editClient)="editItem('client', $event)"
+    (deleteClient)="deleteItem('client', $event)">
+  </app-client-management>
+
+  <!-- Roles Section -->
+  <app-role-management 
+    *ngIf="activeTab === 'roles'"
+    [roles]="roles"
+    [clients]="clients"
+    (addRole)="openForm('role')"
+    (editRole)="editItem('role', $event)"
+    (deleteRole)="deleteItem('role', $event)">
+  </app-role-management>
+
+  <!-- Teams Section -->
+  <app-team-management 
+    *ngIf="activeTab === 'teams'"
+    [teams]="teams"
+    [clients]="clients"
+    [roles]="roles"
+    (addTeam)="openForm('team')"
+    (editTeam)="editItem('team', $event)"
+    (deleteTeam)="deleteItem('team', $event)">
+  </app-team-management>
+
+  <!-- Exercises Section -->
+  <app-exercise-management 
+    *ngIf="activeTab === 'exercises'"
+    [exercises]="exercises"
+    [clients]="clients"
+    (addExercise)="openForm('exercise')"
+    (editExercise)="editItem('exercise', $event)"
+    (deleteExercise)="deleteItem('exercise', $event)">
+  </app-exercise-management>
+
+  <!-- Scenarios Section -->
+  <app-scenario-management 
+    *ngIf="activeTab === 'scenarios'"
+    [scenarios]="scenarios"
+    [clients]="clients"
+    [exercises]="exercises"
+    (addScenario)="openForm('scenario')"
+    (editScenario)="editItem('scenario', $event)"
+    (deleteScenario)="deleteItem('scenario', $event)">
+  </app-scenario-management>
+
+  <!-- Injects Section -->
+  <app-inject-management 
+    *ngIf="activeTab === 'injects'"
+    [injects]="scenarioInjects"
+    [scenarios]="scenarios"
+    (addInject)="openForm('inject')"
+    (editInject)="editItem('inject', $event)"
+    (deleteInject)="deleteItem('inject', $event)">
+  </app-inject-management>
+
+  <!-- Questions Section -->
+  <app-question-management 
+    *ngIf="activeTab === 'questions'"
+    [questions]="questions"
+    [injects]="scenarioInjects"
+    [nistFrameworks]="nistFrameworks"
+    [getRoleName]="getRoleName.bind(this)"
+    [clients]="clients"
+    [roles]="roles"
+    [teams]="teams"
+    [exercises]="exercises"
+    [scenarios]="scenarios"
+    (addQuestion)="openForm('question')"
+    (editQuestion)="editItem('question', $event)"
+    (deleteQuestion)="deleteItem('question', $event)">
+  </app-question-management>
+
+  <!-- Sessions Section -->
+  <app-session-management 
+    *ngIf="activeTab === 'sessions'"
+    [sessions]="sessions"
+    [exercises]="exercises"
+    [scenarios]="scenarios"
+    (addSession)="openForm('session')"
+    (editSession)="editItem('session', $event)"
+    (deleteSession)="deleteItem('session', $event)">
+  </app-session-management>
+</div>
+
+<!-- Popup Form -->
+<div class="popup-overlay" *ngIf="showForm" (click)="closeForm()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <div class="popup-header">
+      <h2>{{ getFormTitle() }}</h2>
+      <button class="close-btn" (click)="closeForm()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Dynamic Form Content -->
+    <div class="popup-body" [ngSwitch]="currentForm">
+      <!-- Client Form -->
+      <div *ngSwitchCase="'client'" class="form-content">
+        <div class="form-group">
+          <label for="clientName">Client Name</label>
+          <input
+            type="text"
+            id="clientName"
+            [(ngModel)]="newClient.name"
+            placeholder="Enter client name"
+          />
+        </div>
+      </div>
+
+      <!-- Role Form -->
+      <div *ngSwitchCase="'role'" class="form-content">
+        <div class="form-group">
+          <label for="roleClient">Client</label>
+          <select id="roleClient" [(ngModel)]="newRole.client_id">
+            <option value="">Select a client</option>
+            <option *ngFor="let client of clients" [value]="client.id">
+              {{ client.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="roleName">Role Name</label>
+          <input
+            type="text"
+            id="roleName"
+            [(ngModel)]="newRole.name"
+            placeholder="Enter role name"
+          />
+        </div>
+      </div>
+
+      <!-- Team Form -->
+      <div *ngSwitchCase="'team'" class="form-content">
+        <div class="form-group">
+          <label for="teamClient">Client</label>
+          <select id="teamClient" [(ngModel)]="newTeam.client_id" (change)="onTeamClientChange()">
+            <option value="">Select a client</option>
+            <option *ngFor="let client of clients" [value]="client.id">
+              {{ client.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="teamName">Team Name</label>
+          <input
+            type="text"
+            id="teamName"
+            [(ngModel)]="newTeam.name"
+            placeholder="Enter team name"
+          />
+        </div>
+        <div class="form-group">
+          <label>Assign Roles</label>
+          <div class="roles-container">
+            <div *ngIf="filteredRoles.length === 0" class="no-roles-message">
+              No roles available for the selected client
+            </div>
+            <div *ngFor="let role of filteredRoles" class="role-checkbox">
+              <label class="role-label">
+                <input 
+                  type="checkbox" 
+                  [checked]="isRoleSelected(role.id)"
+                  (change)="toggleRoleForTeam(role.id)"
+                />
+                {{ role.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exercise Form -->
+      <div *ngSwitchCase="'exercise'" class="form-content">
+        <div class="form-group">
+          <label for="exerciseClient">Client</label>
+          <select id="exerciseClient" [(ngModel)]="newExercise.client_id">
+            <option value="">Select a client</option>
+            <option *ngFor="let client of clients" [value]="client.id">
+              {{ client.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="exerciseName">Exercise Name</label>
+          <input
+            type="text"
+            id="exerciseName"
+            [(ngModel)]="newExercise.name"
+            placeholder="Enter exercise name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="exerciseTime">Time (minutes)</label>
+          <input
+            type="number"
+            id="exerciseTime"
+            [(ngModel)]="newExercise.time"
+            placeholder="Enter time in minutes"
+          />
+        </div>
+        <div class="form-group">
+          <label for="exerciseAmount">Simulated Amount ($)</label>
+          <input
+            type="number"
+            id="exerciseAmount"
+            [(ngModel)]="newExercise.exercise_simulated_amount"
+            placeholder="Enter simulated amount"
+          />
+        </div>
+      </div>
+
+      <!-- Scenario Form -->
+      <div *ngSwitchCase="'scenario'" class="form-content">
+        <div class="form-group">
+          <label for="scenarioClient">Client</label>
+          <select id="scenarioClient" [(ngModel)]="newScenario.client_id">
+            <option value="">Select a client</option>
+            <option *ngFor="let client of clients" [value]="client.id">
+              {{ client.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="scenarioExercise">Exercise</label>
+          <select id="scenarioExercise" [(ngModel)]="newScenario.exercise_id">
+            <option value="">Select an exercise</option>
+            <option *ngFor="let exercise of exercises" [value]="exercise.id">
+              {{ exercise.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="scenarioName">Scenario Name</label>
+          <input
+            type="text"
+            id="scenarioName"
+            [(ngModel)]="newScenario.name"
+            placeholder="Enter scenario name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="scenarioDescription">Description</label>
+          <textarea
+            id="scenarioDescription"
+            [(ngModel)]="newScenario.description"
+            placeholder="Enter scenario description"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Inject Form -->
+      <div *ngSwitchCase="'inject'" class="form-content">
+        <div class="form-group">
+          <label for="injectScenario">Scenario</label>
+          <select id="injectScenario" [(ngModel)]="newScenarioInject.scenario_id">
+            <option value="">Select a scenario</option>
+            <option *ngFor="let scenario of scenarios" [value]="scenario.id">
+              {{ scenario.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="injectName">Inject Name</label>
+          <input
+            type="text"
+            id="injectName"
+            [(ngModel)]="newScenarioInject.name"
+            placeholder="Enter inject name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="situationDescription">Situation Description</label>
+          <textarea
+            id="situationDescription"
+            [(ngModel)]="newScenarioInject.data.situation.description"
+            placeholder="Enter situation description"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="impactDescription">Impact Description</label>
+          <textarea
+            id="impactDescription"
+            [(ngModel)]="newScenarioInject.data.impact.description"
+            placeholder="Enter impact description"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <label for="actionDescription">Action Required Description</label>
+          <textarea
+            id="actionDescription"
+            [(ngModel)]="newScenarioInject.data.action_required.description"
+            placeholder="Enter action required description"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Question Form -->
+      <div *ngSwitchCase="'question'" class="form-content">
+        <!-- Exercise Dropdown (First level) -->
+        <div class="form-group">
+          <label for="questionExercise">Exercise</label>
+          <select
+            id="questionExercise"
+            [(ngModel)]="newQuestion.execrise_id"
+            (change)="onExerciseChange()"
+          >
+            <option value="">Select an exercise</option>
+            <option *ngFor="let exercise of exercises" [value]="exercise.id">
+              {{ exercise.name }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Scenario Dropdown (Second level) -->
+        <div class="form-group">
+          <label for="questionScenario">Scenario</label>
+          <select
+            id="questionScenario"
+            [(ngModel)]="newQuestion.scenario_id"
+            (change)="onScenarioChange()"
+            [disabled]="!newQuestion.execrise_id || filteredScenarios.length === 0"
+          >
+            <option value="">Select a scenario</option>
+            <option *ngFor="let scenario of filteredScenarios" [value]="scenario.id">
+              {{ scenario.name }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Inject Dropdown (Third level) -->
+        <div class="form-group">
+          <label for="questionInject">Inject</label>
+          <select
+            id="questionInject"
+            [(ngModel)]="newQuestion.scenario_inject_id"
+            [disabled]="!newQuestion.scenario_id || filteredInjects.length === 0"
+          >
+            <option value="">Select an inject</option>
+            <option *ngFor="let inject of filteredInjects" [value]="inject.id">
+              {{ inject.name }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Roles Checkboxes -->
+        <div class="form-group">
+          <label>Roles (Select all that apply)</label>
+          <div class="roles-header">
+            <button type="button" class="select-all-btn" (click)="selectAllRoles()" [disabled]="filteredRoles.length === 0">
+              Select All Roles
+            </button>
+          </div>
+          <div class="roles-container">
+            <div *ngIf="filteredRoles.length === 0" class="no-roles-message">
+              No roles available for the selected client
+            </div>
+            <div *ngFor="let role of filteredRoles" class="role-checkbox">
+              <label class="role-label">
+                <input 
+                  type="checkbox" 
+                  [checked]="role.selected"
+                  (change)="toggleRoleSelection(role)"
+                />
+                {{ role.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="questionText">Question</label>
+          <textarea
+            id="questionText"
+            [(ngModel)]="newQuestion.question"
+            placeholder="Enter question text"
+            class="question-textarea"
+          ></textarea>
+        </div>
+        
+        <!-- Compliance Reference Field -->
+        <div class="form-group">
+          <label for="complianceReference">Compliance Reference</label>
+          <input
+            type="text"
+            id="complianceReference"
+            [(ngModel)]="newQuestion.compliance_reference"
+            placeholder="Enter compliance reference (e.g., ISO 27001, NIST CSF)"
+          />
+        </div>
+        
+        <!-- SWOT Category Dropdown -->
+        <div class="form-group">
+          <label for="swotCategory">SWOT Category</label>
+          <select id="swotCategory" [(ngModel)]="newQuestion.swot_category_id">
+            <option [ngValue]="null">Select SWOT Category (Optional)</option>
+            <option *ngFor="let category of swotCategories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        
+        <!-- Question Category Dropdown -->
+        <div class="form-group">
+          <label for="questionCategory">Question Category</label>
+          <select id="questionCategory" [(ngModel)]="newQuestion.question_category_id">
+            <option [ngValue]="null">Select Question Category (Optional)</option>
+            <option *ngFor="let category of questionCategories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Options</label>
+          <div class="options-container">
+            <div
+              class="option-input"
+              *ngFor="let option of newQuestion.options; let i = index"
+            >
+              <div class="option-row">
+                <input
+                  type="text"
+                  [placeholder]="'Option ' + (i + 1)"
+                  [(ngModel)]="option.option"
+                  class="option-text"
+                />
+                <label class="correct-option-label">
+                  <input
+                    type="radio"
+                    [name]="'correct'"
+                    [checked]="option.is_correct"
+                    (change)="setCorrectOption(i)"
+                  />
+                  Correct Answer
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>NIST Frameworks</label>
+          <div class="nist-framework-selection">
+            <div class="nist-framework-grid">
+              <div 
+                *ngFor="let framework of nistFrameworks"
+                class="nist-framework-item"
+                [class.selected]="isNistFrameworkSelected(framework.id)"
+                (click)="toggleNistFramework(framework.id)"
+              >
+                <div class="framework-checkbox">
+                  <input 
+                    type="checkbox" 
+                    [checked]="isNistFrameworkSelected(framework.id)"
+                    (click)="$event.stopPropagation()"
+                    (change)="toggleNistFramework(framework.id)"
+                  />
+                  <span class="framework-name">{{framework.name}}</span>
+                </div>
+                <span class="framework-seq">#{{framework.seq_no}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Session Form -->
+      <div *ngSwitchCase="'session'" class="form-content">
+        <div class="form-group">
+          <label for="sessionExercise">Exercise</label>
+          <select id="sessionExercise" [(ngModel)]="newSession.exercise_id">
+            <option value="">Select an exercise</option>
+            <option *ngFor="let exercise of exercises" [value]="exercise.id">
+              {{ exercise.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="sessionScenario">Scenario</label>
+          <select id="sessionScenario" [(ngModel)]="newSession.scenario_id">
+            <option value="">Select a scenario</option>
+            <option *ngFor="let scenario of scenarios" [value]="scenario.id">
+              {{ scenario.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="startTime">Scheduled Start Time</label>
+          <input
+            type="datetime-local"
+            id="startTime"
+            [(ngModel)]="newSession.scheduled_start_time"
+          />
+        </div>
+        <div class="form-group">
+          <label for="endTime">Scheduled End Time</label>
+          <input
+            type="datetime-local"
+            id="endTime"
+            [(ngModel)]="newSession.scheduled_end_time"
+          />
+        </div>
+        <div class="form-group">
+          <label for="createdBy">Created By</label>
+          <input
+            type="text"
+            id="createdBy"
+            [(ngModel)]="newSession.created_by"
+            placeholder="Enter your name"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="popup-footer">
+      <button class="cancel-btn" (click)="closeForm()">Cancel</button>
+      <button class="submit-btn" (click)="submitForm()">Save</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="login-container">
+    <div class="logo">
+      <img src="https://esflabs.ai/logo.svg" alt="ESF Labs" class="logo-image">
+    </div>
+    <div class="login-box">
+      <h1>Cyber War Room</h1>
+      <h2>Cyber Darshinik</h2>
+      
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input 
+          type="text" 
+          id="name" 
+          [(ngModel)]="name" 
+          placeholder="Enter your name"
+          autocomplete="name"
+          autocorrect="off"
+          autocapitalize="words"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" [(ngModel)]="selectedRole">
+          <option value="">Select a role</option>
+          <option *ngFor="let role of roles" [value]="role.id">
+            {{role.name}}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="exercise">Exercise</label>
+        <p class="scenario-text">{{exercises.name}}</p>
+      </div>
+
+      <div class="form-group">
+        <label for="scenario">Scenario</label>
+        <p class="scenario-text">{{scenarios.name}}</p>
+      </div>
+
+      <button (click)="onSubmit()" [disabled]="!isFormValid()">
+        Start Exercise
+      </button>
+    </div>
+  </div>

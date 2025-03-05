@@ -7,10 +7,10 @@ const router = Router();
 // Create a new scenario
 router.post("/", async (req: any, res: any) => {
   try {
-    const { name, client_id, execrise_id } = req.body;
-
-    if (!name || !client_id || !execrise_id) {
-      return res.status(400).json({ error: "Name, client_id, and execrise_id are required" });
+    const { name, client_id, exercise_id ,description} = req.body;
+    console.log(req.body)
+    if (!name || !client_id || !exercise_id ||!description) {
+      return res.status(400).json({ error: "Name, client_id, and exercise_id are required" });
     }
 
     // Validate client_id
@@ -20,14 +20,14 @@ router.post("/", async (req: any, res: any) => {
     }
 
     // Validate execrise_id
-    const exerciseCheck = await pool.query("SELECT * FROM public.execrise WHERE id = $1", [execrise_id]);
+    const exerciseCheck = await pool.query("SELECT * FROM public.execrise WHERE id = $1", [exercise_id]);
     if (exerciseCheck.rows.length === 0) {
-      return res.status(404).json({ error: `Exercise ID ${execrise_id} does not exist` });
+      return res.status(404).json({ error: `Exercise ID ${exercise_id} does not exist` });
     }
 
     const result = await pool.query<Scenario>(
-      "INSERT INTO public.scenarios (name, client_id, execrise_id) VALUES ($1, $2, $3) RETURNING *",
-      [name, client_id, execrise_id]
+      "INSERT INTO public.scenarios (name, client_id, execrise_id, description) VALUES ($1, $2, $3, $4) RETURNING *",
+      [name, client_id, exercise_id, description]
     );
 
     res.status(201).json({ message: "Scenario created successfully", scenario: result.rows[0] });
@@ -44,6 +44,29 @@ router.get("/", async (req: any, res: any) => {
     res.status(200).json(result.rows);
   } catch (error) {
     console.error("❌ Error fetching scenarios:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// Get scenarios by exercise ID
+router.get("/exercise/:execrise_id", async (req: any, res: any) => {
+  try {
+    const execriseId = parseInt(req.params.execrise_id, 10);
+    if (isNaN(execriseId)) {
+      return res.status(400).json({ error: "Invalid exercise ID" });
+    }
+
+    // Validate exercise ID
+    const exerciseCheck = await pool.query("SELECT * FROM public.execrise WHERE id = $1", [execriseId]);
+    if (exerciseCheck.rows.length === 0) {
+      return res.status(404).json({ error: `Exercise ID ${execriseId} not found` });
+    }
+
+    const result = await pool.query<Scenario>("SELECT * FROM public.scenarios WHERE execrise_id = $1 ORDER BY id", [execriseId]);
+
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error("❌ Error fetching scenarios by exercise ID:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });

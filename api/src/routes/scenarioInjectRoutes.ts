@@ -8,7 +8,7 @@ const router = Router();
 router.post("/", async (req: any, res: any) => {
   try {
     const { scenario_id, name, data } = req.body;
-
+    console.log(req.body)
     if (!scenario_id || !name || !data) {
       return res.status(400).json({ error: "scenario_id, name, and data are required" });
     }

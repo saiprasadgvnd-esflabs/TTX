@@ -7,9 +7,10 @@ const router = Router();
 // Create a new exercise
 router.post("/", async (req: any, res: any) => {
   try {
-    const { name, time, execrise_simulated_amount, client_id } = req.body;
-
-    if (!name || !time || !execrise_simulated_amount || !client_id) {
+    const { name, time, exercise_simulated_amount, client_id } = req.body;
+    console.log(req.body)
+    if (!name || !time || !exercise_simulated_amount || !client_id) {
+      
       return res.status(400).json({ error: "Name, time, execrise_simulated_amount, and client_id are required" });
     }
 
@@ -21,7 +22,7 @@ router.post("/", async (req: any, res: any) => {
 
     const result = await pool.query<Exercise>(
       "INSERT INTO public.execrise (name, time, execrise_simulated_amount, client_id) VALUES ($1, $2, $3, $4) RETURNING *",
-      [name, time, execrise_simulated_amount, client_id]
+      [name, time, exercise_simulated_amount, client_id]
     );
 
     res.status(201).json({ message: "Exercise created successfully", exercise: result.rows[0] });
